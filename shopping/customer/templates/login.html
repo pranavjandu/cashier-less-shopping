@@ -1,0 +1,80 @@
+{% load static %}
+<!doctype html>
+<html>
+
+<head>
+    <title>login and registration</title>
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}">
+</head>
+
+<body>
+    <div class="hero">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="Login()">Log In</button>
+                <button type="button" class="toggle-btn" onclick="Register()">Register</button>
+
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/ankit.lodhi.1614" class="fb" target="_blank"><img
+                        src="{% static 'images/img/fb.png' %}"></a>
+
+
+                <a href="https://twitter.com/home?lang=en" class="twitter" target="_blank"><img
+                        src="{% static 'images/img/tw.png' %}"></a>
+
+                <a href="https://www.google.com/" class="google" target="_blank"><img src="{% static 'images/img/gp.png' %}"></a>
+
+            </div>
+            <!--    login form-->
+            <form id="login" class="input-group" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="login">
+                <input type="text" class="input-field" placeholder="Username" name="username" required>
+                <input type="password" class="input-field" placeholder="Enter Password" name="password" required>
+                <button type="submit" class="submit-btn">Log In</button>
+
+            </form>
+            <!--    registration form-->
+            <form id="register" class="input-group" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="register">
+                <input type="text" class="input-field" placeholder="Username" name="username" required>
+                <input type="email" class="input-field" placeholder="Email Id" name="email" required>
+                <input type="password" class="input-field" placeholder="Enter Password" name="password" required>
+                <button type="submit" class="submit-btn">Log In</button>
+
+            </form>
+
+
+
+        </div>
+    </div>
+
+
+    <script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+
+        function Register() {
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "100px";
+        }
+        function Login() {
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0";
+        }
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
