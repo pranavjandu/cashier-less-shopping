@@ -8,12 +8,9 @@ Dashboard
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock externalcss %}
 
-</head>
-
-<body>
   {% block navbar %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a style="color: red;font-size:25px;" class="navbar-brand" href="#">CashierLess</a>
+    <a style="color: rgb(28, 178, 238);font-size:25px;" class="navbar-brand" href="#">CashierLess</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -39,7 +36,7 @@ Dashboard
   </nav>
   {% endblock navbar %}
   {% block maincontent %}
-  <div class="container-fluid">
+  <div class="container-fluid mt-2">
     <div id="sliderindicator" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
         <li data-target="#sliderindicator" data-slide-to="0" class="active"></li>
@@ -67,29 +64,48 @@ Dashboard
       </a>
     </div>
     <!--      footer-->
-    <div class="row">
-        <div class="col col-sm-6">
-          <div class="footer_left">
-            <h1>Follow Us On</h1>
-            <div id="social">
-              <a href="https://www.instagram.com/mohit_1607/" class="instagram"></a>
-              <a href="https://www.facebook.com/profile.php?id=100007205018667" / class="facebook"> </a>
-            </div>
+    <!-- Footer -->
+    <footer class="bg-light text-center">
+      <!-- Grid container -->
+      <div class="container-fluid p-1">
+        <!--Grid row-->
+        <div class="row mt-3 mb-3">
+          <!--Grid column-->
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <h6 class="text-uppercase">Thank you for Shopping with us</h6>
+            <p>
+              Now you can avoid the hassle of long lines.
+            </p>
           </div>
-        </div>
-        <div class="col col-sm-6">
-          <div class="footer_middle">
-            <div class="about">
-              <h1>ABOUT US</h1>
-              <p>welcome to our Cashier Less shopping website.</p>
-              <p>THANKS PLEASE VISIT AGAIN!!!!!</p>
-            </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <h5 class="text-uppercase">Links</h5>
+
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="#!" class="text-dark">Contact us</a>
+              </li>
+              <li>
+                <a href="#!" class="text-dark">Careers</a>
+              </li>
+            </ul>
           </div>
+          <!--Grid column-->
+          <!--Grid column-->
         </div>
-    </div>
+        <!--Grid row-->
+      </div>
+      <!-- Grid container -->
+
+      <!-- Copyright -->
+      <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+        © 2020 Copyright:
+        <a class="text-dark" href="https://www.cashierless.com/">cashierless</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
   </div>
   {% endblock maincontent %}
-
-</body>
-
-</html>
