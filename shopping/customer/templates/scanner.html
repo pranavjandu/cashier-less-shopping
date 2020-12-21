@@ -1,0 +1,63 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block title%}
+Scan Product
+{% endblock title %}
+{% block externalcss%}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
+{% endblock externalcss %}
+
+  {% block navbar %}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a style="color: rgb(28, 178, 238);font-size:25px;" class="navbar-brand" href="#">CashierLess</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'customerhomepage' %}">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'scanner' %}">Scanner</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Cart</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li>
+          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  {% endblock navbar %}
+  {% block maincontent %}
+  <div class="container-fluid p-0 mt-2">
+    <div class="row text-center">
+        <div class="col col-sm-12">
+            <div id="container">
+                <h1>QR Code Scanner</h1>
+          
+                <a id="btn-scan-qr">
+                  <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg">
+                <a/>
+          
+                <canvas hidden="" id="qr-canvas"></canvas>
+          
+                <div id="qr-result" hidden="">
+                  <b>Data:</b> <span id="outputData"></span>
+                </div>
+              </div>
+        </div>
+
+    </div>
+
+  {% endblock maincontent %}
+  {% block externalscript %}
+  <script src="{% static 'js/qrCodeScanner.js' %}"></script>
+  {% endblock externalscript %}

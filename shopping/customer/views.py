@@ -39,3 +39,13 @@ def mainpage(request):
 
 def dashboard(request):
     return render(request, 'index.html')   
+
+def logoutuser(request):
+    '''
+    for logging user out and redirecting to login-page
+    '''
+    logout(request)
+    return redirect('loginpage')
+
+def scanner(request):
+    return render(request,'scanner.html')
