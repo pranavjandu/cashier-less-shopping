@@ -1,0 +1,35 @@
+
+#social{
+    padding-left:275px;
+    background-color:transparent;
+}
+
+    .instagram {
+        width: 115px;
+        height: 113px;
+        display: block;
+        background-image: url('../images/white.png');
+        background-position: 0 0;
+        transition: all 0.3s .1s linear;
+        float: left;
+    }
+
+    .instagram:hover {
+        background-position: 0 -111px;
+    }
+
+    .facebook {
+        width: 115px;
+        height: 113px;
+        display: block;
+        background-image: url('../images/white2.png');
+        background-position: 0px 0px;
+        margin-left: 111px;
+        margin-bottom: 111px;
+    }
+
+    .facebook:hover {
+        background-position: 0px -111px;
+        transition: all 0.3s .1s linear;
+    }
+
