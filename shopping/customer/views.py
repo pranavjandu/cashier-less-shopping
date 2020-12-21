@@ -1,10 +1,12 @@
+import json
+from django.db.models.fields import DecimalField
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from .models import Customer
-
+from .models import Customer, Product, Cart
+from django.http import JsonResponse
 
 
 def mainpage(request):
@@ -39,3 +41,37 @@ def mainpage(request):
 
 def dashboard(request):
     return render(request, 'index.html')   
+
+def logoutuser(request):
+    '''
+    for logging user out and redirecting to login-page
+    '''
+    logout(request)
+    return redirect('loginpage')
+
+def scanner(request):
+    return render(request,'scanner.html')
+
+def cart(request):
+    customer = Customer.objects.get(user=request.user)
+    cart,created = Cart.objects.get_or_create(customer=customer)
+    if created==False:
+        products = cart.products.all()
+    else:
+        products = {}
+    return render(request,"cart.html", {'products':products, 'cart':cart})
+
+
+def addtocart(request):
+    product = request.GET.get('productid', None)
+    data = {
+        'added': Product.objects.filter(id=product).exists()
+    }
+    if(Product.objects.filter(id=product).exists()):
+        customer = Customer.objects.get(user=request.user)
+        cart,created = Cart.objects.get_or_create(customer=customer)
+        item = Product.objects.get(id=product)
+        cart.products.add(item)
+        cart.total = cart.total + item.price
+        cart.save() 
+    return JsonResponse(data)
