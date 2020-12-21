@@ -25,7 +25,7 @@ Scan Product
           <a class="nav-link" href="{% url 'scanner' %}">Scanner</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Cart</a>
+          <a class="nav-link" href="{% url 'cart' %}">Cart</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -48,10 +48,7 @@ Scan Product
                 <a/>
           
                 <canvas hidden="" id="qr-canvas"></canvas>
-          
-                <div id="qr-result" hidden="">
-                  <b>Data:</b> <span id="outputData"></span>
-                </div>
+        
               </div>
         </div>
 

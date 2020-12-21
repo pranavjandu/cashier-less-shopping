@@ -12,14 +12,27 @@ let scanning = false;
 
 qrcode1.callback = res => {
   if (res) {
-    outputData.innerText = res;
+    $.ajax({
+      url: '/addtocart',
+      data: {
+        'productid': res
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.added) {
+          alert("Product added");
+        }
+        else{
+          alert("Product failed to add")
+        }
+      }
+    });
     scanning = false;
 
     video.srcObject.getTracks().forEach(track => {
       track.stop();
     });
 
-    qrResult.hidden = false;
     canvasElement.hidden = true;
     btnScanQR.hidden = false;
   }
@@ -30,7 +43,6 @@ btnScanQR.onclick = () => {
     .getUserMedia({ video: { facingMode: "environment" } })
     .then(function(stream) {
       scanning = true;
-      qrResult.hidden = true;
       btnScanQR.hidden = true;
       canvasElement.hidden = false;
       video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
