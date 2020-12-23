@@ -1,0 +1,127 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block title%}
+Scan Order
+{% endblock title %}
+{% block externalcss%}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+<script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js"></script>
+{% endblock externalcss %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a style="color:rgb(255, 255, 255);font-size:25px;" class="navbar-brand" href="#">Guard</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'guardHome' %}">Home</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li>
+        <a class="nav-link" href="{% url 'logoutGuard' %}">Logout</a>
+      </li>
+    </div>
+    </ul>
+  </div>
+</nav>
+{% endblock navbar %}
+  {% block maincontent %}
+  <div class="container-fluid p-0 mt-2">
+    <div class="row text-center">
+        <div class="col col-sm-12">
+            <div id="container">
+                <h1>QR Code Scanner</h1>
+                <h5>Scan the customer's QR and verify the order items</h5>
+          
+                <a id="btn-scan-qr">
+                  <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg">
+                <a/>
+          
+                <canvas hidden="" id="qr-canvas"></canvas>
+        
+              </div>
+        </div>
+
+    </div>
+
+  {% endblock maincontent %}
+  {% block externalscript %}
+  <script>
+    const qrcode1 = window.qrcode;
+
+const video = document.createElement("video");
+const canvasElement = document.getElementById("qr-canvas");
+const canvas = canvasElement.getContext("2d");
+
+const qrResult = document.getElementById("qr-result");
+const btnScanQR = document.getElementById("btn-scan-qr");
+
+let scanning = false;
+
+qrcode1.callback = res => {
+  if (res) {
+    $.ajax({
+      url: "{% url 'getdetailsGuard' %}",
+      data: {
+        'orderid': res
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.added) {
+          window.location.replace("{% url 'verifyGuard' %}");
+        }
+        else{
+          alert("Wrong QR code. Contact Manager if problem persists.")
+        }
+      }
+    });
+    scanning = false;
+
+    video.srcObject.getTracks().forEach(track => {
+      track.stop();
+    });
+
+    canvasElement.hidden = true;
+    btnScanQR.hidden = false;
+  }
+};
+
+btnScanQR.onclick = () => {
+  navigator.mediaDevices
+    .getUserMedia({ video: { facingMode: "environment" } })
+    .then(function(stream) {
+      scanning = true;
+      btnScanQR.hidden = true;
+      canvasElement.hidden = false;
+      video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+      video.srcObject = stream;
+      video.play();
+      tick();
+      scan();
+    });
+};
+
+function tick() {
+  canvasElement.height = video.videoHeight;
+  canvasElement.width = video.videoWidth;
+  canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+
+  scanning && requestAnimationFrame(tick);
+}
+
+function scan() {
+  try {
+    qrcode1.decode();
+  } catch (e) {
+    setTimeout(scan, 300);
+  }
+}
+
+  </script>
+  {% endblock externalscript %}

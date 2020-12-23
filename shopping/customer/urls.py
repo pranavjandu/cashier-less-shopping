@@ -25,6 +25,14 @@ urlpatterns = [
     path('scanner', views.scanner, name='scanner'),
     path('cart', views.cart, name="cart"),
     path('addtocart', views.addtocart),
-    path('checkout',views.checkout, name="checkout")
+    path('checkout',views.checkout, name="checkout"),
+
+    path('guard/login', views.loginGuard, name="guardlogin"),
+    path('guard/scanner', views.scanGuard, name="guardHome"),
+    path('guard/verify', views.verifyGuard, name="verifyGuard"),
+    path('guard/details', views.getdetailsGuard, name="getdetailsGuard"),
+    path('guard/logout', views.logoutGuard, name="logoutGuard"),
+    path('guard/raiseissue', views.raiseIssue, name="raiseIssue"),
+    path('guard/verified', views.verified, name="verified"),
 ]
 urlpatterns += static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
