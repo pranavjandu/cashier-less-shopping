@@ -124,3 +124,81 @@ def checkout(request):
     orderid = order.id
     context = {'cartItems':cartItems, 'order':order, 'items':items, 'orderid': orderid}
     return render(request, 'checkout.html', context)
+
+
+def loginGuard(request):
+    '''
+    For logging users in
+    '''
+    if request.method=="POST":
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        user=authenticate(request,username=username,password=password)  #django default authentication
+        if user is not None:
+            login(request,user)
+            if user.user_type=='2' or user.user_type=='1':
+                return redirect('guardHome')
+            else:
+                messages.error(request," Wrong Credentials! Please Try again or contact your administrator")
+        else:
+            messages.info(request," Wrong Credentials! Please Try again or contact your administrator")
+
+    return render(request,'guard/login.html')
+
+def scanGuard(request):
+    if (request.user.is_authenticated)==False:
+        return redirect('guardlogin')
+
+    return render(request,'guard/scanner.html')
+
+
+def getdetailsGuard(request):
+    orderid = request.GET.get('orderid', None)
+    data = {
+        'added': Order.objects.filter(id=orderid).exists()
+    }
+    if (Order.objects.filter(id=orderid).exists()):
+        request.session['currentOrder'] = orderid
+    return JsonResponse(data)
+
+
+def verifyGuard(request):
+    if (request.user.is_authenticated)==False:
+        return redirect('guardlogin')
+
+    orderid = request.session['currentOrder']
+    order = Order.objects.get(id=orderid)
+    if order==None:
+        return redirect('guardHome')
+    else:
+        customer = order.customer
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+
+    context =  {'cartItems':cartItems ,'order':order, 'items':items}
+    return render(request, 'guard/verify.html', context)
+
+def logoutGuard(request):
+    logout(request)
+    return redirect('guardlogin')
+
+
+def verified(request):
+    if request.method=='GET':
+        orderid = request.GET.get('order')
+        orderid = int(orderid)
+        order = Order.objects.get(id=orderid)
+        order.verified = True
+        order.save()
+        del request.session['currentOrder']
+    return redirect('guardHome')
+
+def raiseIssue(request):
+    if request.method=='GET':
+        orderid = request.GET.get('order')
+        orderid = int(orderid)
+        order = Order.objects.get(id=orderid)
+        order.issueRaised = True
+        order.save()
+        del request.session['currentOrder']
+    return redirect('guardHome')

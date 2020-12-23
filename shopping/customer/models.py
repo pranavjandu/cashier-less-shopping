@@ -5,8 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
-    user_type_data=((1,"Manager"),(2,"Guard"),(3,"Customer"))
-    user_type=models.CharField(default=1,choices=user_type_data,max_length=10)
+    user_type_data=(('1',"Manager"),('2',"Guard"),('3',"Customer"))
+    user_type=models.CharField(default=2,choices=user_type_data,max_length=10)
 
 
 class Manager(models.Model):
@@ -59,6 +59,8 @@ class Order(models.Model):
 	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
 	date_ordered = models.DateTimeField(auto_now_add=True)
 	complete = models.BooleanField(default=False)
+	verified = models.BooleanField(default=False)
+	issueRaised = models.BooleanField(default=False)
 	transaction_id = models.CharField(max_length=100, null=True)
 
 	def __str__(self):
