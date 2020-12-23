@@ -5,9 +5,9 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from .models import Customer, Product, Cart
+from .models import *
 from django.http import JsonResponse
-
+from .utils import cartData
 
 def mainpage(request):
     '''
@@ -29,10 +29,11 @@ def mainpage(request):
             email = request.POST.get('email')
             password = request.POST.get('password')
             try:   #creating Customer object
-                user=User.objects.create_user(username=username,password=password,email=email)
+                user=CustomUser.objects.create_user(username=username,password=password,email=email,user_type=3)
+                user.customer.name=username #adding name to instructor object
                 user.save()
                 messages.success(request," Signup successfull ")
-                return redirect('customerhomepage')
+                return redirect('loginpage')
             except:
                 messages.error(request," Error occured. Please Try again!")
                 return redirect('loginpage')
@@ -40,7 +41,17 @@ def mainpage(request):
 
 
 def dashboard(request):
-    return render(request, 'index.html')   
+    if (request.user.is_authenticated)==False:
+        return redirect('loginpage')
+
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    context = {'cartItems':cartItems}
+    return render(request, 'index.html', context)   
 
 def logoutuser(request):
     '''
@@ -50,28 +61,66 @@ def logoutuser(request):
     return redirect('loginpage')
 
 def scanner(request):
-    return render(request,'scanner.html')
+    if (request.user.is_authenticated)==False:
+        return redirect('loginpage')
+
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    context = {'cartItems':cartItems}
+    return render(request,'scanner.html', context)
 
 def cart(request):
-    customer = Customer.objects.get(user=request.user)
-    cart,created = Cart.objects.get_or_create(customer=customer)
-    if created==False:
-        products = cart.products.all()
-    else:
-        products = {}
-    return render(request,"cart.html", {'products':products, 'cart':cart})
+    if (request.user.is_authenticated)==False:
+        return redirect('loginpage')
+
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    context = {'cartItems':cartItems, 'order':order, 'items':items}
+    return render(request,'cart.html', context)
 
 
 def addtocart(request):
     product = request.GET.get('productid', None)
+    action = request.GET.get('action')
     data = {
         'added': Product.objects.filter(id=product).exists()
     }
-    if(Product.objects.filter(id=product).exists()):
-        customer = Customer.objects.get(user=request.user)
-        cart,created = Cart.objects.get_or_create(customer=customer)
-        item = Product.objects.get(id=product)
-        cart.products.add(item)
-        cart.total = cart.total + item.price
-        cart.save() 
+    if (Product.objects.filter(id=product).exists()):
+        customer = request.user.customer
+        product = Product.objects.get(id=product)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+        if action == 'add':
+            orderItem.quantity = (orderItem.quantity + 1)
+        elif action == 'remove':
+            orderItem.quantity = (orderItem.quantity - 1)
+
+        orderItem.save()
+        if orderItem.quantity <= 0:
+            orderItem.delete()
+
     return JsonResponse(data)
+
+
+def checkout(request):
+    if (request.user.is_authenticated)==False:
+        return redirect('loginpage')
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    order.complete = True
+    order.save()
+    orderid = order.id
+    context = {'cartItems':cartItems, 'order':order, 'items':items, 'orderid': orderid}
+    return render(request, 'checkout.html', context)
