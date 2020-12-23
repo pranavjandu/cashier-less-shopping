@@ -25,5 +25,6 @@ urlpatterns = [
     path('scanner', views.scanner, name='scanner'),
     path('cart', views.cart, name="cart"),
     path('addtocart', views.addtocart),
+    path('checkout',views.checkout, name="checkout")
 ]
 urlpatterns += static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

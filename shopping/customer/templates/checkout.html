@@ -1,0 +1,75 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block title%}
+Checkout
+{% endblock title %}
+{% block externalcss%}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}" />
+{% endblock externalcss %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a style="color:rgb(255, 255, 255);font-size:25px;" class="navbar-brand" href="#">CashierLess</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'customerhomepage' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'scanner' %}">Scanner</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li>
+                <div class="form-inline my-2 my-lg-0">
+                    <a href="{% url 'cart' %}">
+                        <img id="cart-icon" src="{% static 'images/cart.png' %}">
+                    </a>
+                    <p id="cart-total">{{cartItems}}</p>
+            </li>
+            <li>
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+    </div>
+    </ul>
+    </div>
+</nav>
+{% endblock navbar %}
+{% block maincontent %}
+<div class="container-fluid p-0 mt-2">
+    <div class="row text-center">
+        <div class="col col-sm-12">
+            <div id="container">
+                <h1>Order successful</h1>
+                <h5>Show this QR to the Guard on your way out.</h5>
+                <h6>Thankyou!</h6>
+                <input type="hidden" value="{{orderid}}" id="qr-data">
+                <div class="row text-center">
+                    <div class="col col-sm-12 text-center mt-3">
+                        <div id="qr-code">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock maincontent %}
+{% block externalscript %}
+<script src="{% static 'js/qrcode.min.js' %}"></script>
+<script src="{% static 'js/qrReader.js' %}"></script>
+<script>
+    var qrdata = document.getElementById('qr-data');
+    var qrcode = new QRCode(document.getElementById('qr-code'));
+    var data = qrdata.value;
+    qrcode.makeCode(data);
+</script>
+
+{% endblock externalscript %}
